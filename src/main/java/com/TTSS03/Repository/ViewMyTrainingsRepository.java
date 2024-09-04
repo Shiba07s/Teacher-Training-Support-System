@@ -15,12 +15,7 @@ import com.TTSS03.Entity.ViewMyTrainings;
 
 public interface ViewMyTrainingsRepository extends JpaRepository<ViewMyTrainings, Integer> {
 
-	@Query("SELECT sv FROM ViewMyTrainings sv WHERE sv.treasuryid = :treasuryid")
-	List<ViewMyTrainings> findByTreasuryId(@Param("treasuryid") String treasuryid);
-	
-	@Query("SELECT  distinct sv.tname,sv.ref_planner_id FROM ViewMyTrainings sv WHERE sv.appliedtype= :appliedtype")
-	List<String> findByTnameAppliedType(@Param("appliedtype") String appliedtype);
-	
+	 
 	@Query("SELECT  distinct sv.tname,sv.ref_planner_id FROM ViewMyTrainings sv WHERE sv.status= :status")
 	List<String> findByTnameStatus(@Param("status") String status);
 	
@@ -66,100 +61,7 @@ public interface ViewMyTrainingsRepository extends JpaRepository<ViewMyTrainings
 	
 	
 	
-	@Query(value = "SELECT * FROM mytrainings sv WHERE sv.ref_planner_id = :ref_planner_id AND sv.vid = :vid AND sv.status = :status", nativeQuery = true)
-	List<Map<String, Object>> findDataByTidVidStatus(@Param("ref_planner_id") String ref_planner_id, @Param("vid") String vid, @Param("status") String status);
-
-	@Query(value = "SELECT * FROM mytrainings sv WHERE sv.ref_planner_id = :ref_planner_id AND sv.vid = :vid AND sv.district_name = :district_name AND sv.status = :status", nativeQuery = true)
-	List<Map<String, Object>> findDataByTidVidDistStatus(@Param("ref_planner_id") String ref_planner_id, @Param("vid") String vid, @Param("district_name") String district_name, @Param("status") String status);
-
-	@Query(value = "SELECT * FROM mytrainings sv WHERE sv.ref_planner_id = :ref_planner_id AND sv.vid = :vid AND sv.district_name = :district_name AND sv.designation = :designation AND sv.status = :status", nativeQuery = true)
-	List<Map<String, Object>> findTrainingStatusWithDesg(@Param("ref_planner_id") String ref_planner_id, @Param("vid") String vid, @Param("district_name") String district_name, @Param("designation") String designation, @Param("status") String status);
-
-	
-	
-	@Query("SELECT distinct sv.district_name FROM ViewMyTrainings sv WHERE sv.vid = :vid")
-	List<String> findDistrictByTid(@Param("vid") String vid);
-	
-
-	
-	@Query("SELECT sv FROM ViewMyTrainings sv WHERE sv.ref_planner_id = :ref_planner_id and sv.vid = :vid and sv.district_name = :district_name and sv.appliedtype = :appliedtype")
-	List<Map<String, Object>> findTrainingWithoutDesg(@Param("ref_planner_id") String ref_planner_id,@Param("vid") String vid,@Param("district_name") String district_name,@Param("appliedtype") String appliedtype);
-	
-		
-	@Query("SELECT sv FROM ViewMyTrainings sv WHERE sv.ref_planner_id = :ref_planner_id and sv.vid = :vid and sv.district_name = :district_name and sv.status = :status")
-	List<Map<String, Object>> findTrainingStatusWithoutDesg(@Param("ref_planner_id") String ref_planner_id,@Param("vid") String vid,@Param("district_name") String district_name,@Param("status") String status);
-
-	
-	@Query("SELECT COUNT(t) FROM ViewMyTrainings t WHERE t.ref_planner_id = :refPlannerId AND t.vid = :venueId")
-	int countAppliedTrainings(@Param("refPlannerId") String refPlannerId, @Param("venueId") String venueId);
-
-	@Query("SELECT m FROM ViewMyTrainings m WHERE m.treasuryid = :treasuryid AND m.ref_planner_id = :ref_planner_id ")
-	List<ViewMyTrainings> findByTreasuryIdAndRefPlannerId(@Param("treasuryid") String treasuryid,
-			@Param("ref_planner_id") String ref_planner_id);
-
-//	@Query("SELECT  mt.treasuryid,tm.tname, vm.vname, tm.tmode, tm.tdescription, tm.training_start_dt, tm.training_end_dt, vm.vaddress, vm.vcontactno, vm.vcontactmailid, vm.maplocation,tm.resourcetype "
-//			+ "FROM AppliedTrainingsFromTrainee mt "
-//			+ "JOIN ScheduleTrainings tm ON mt.ref_planner_id = tm.ref_planner_id "
-//			+ "JOIN SearchVenue vm ON mt.venueid = vm.vid " + "WHERE mt.treasuryid = :treasuryid and mt.ref_planner_id = tm.ref_planner_id and mt.venueid = vm.vid")
-//	List<Object[]> findTrainingDetailsByTreasuryId(@Param("treasuryid") String treasuryid );
-//	
-
-	// get Data for waiting-for-approval list
-	@Query(value = "SELECT mt.tname, mt.tmode,  mt.treasuryid, mt.tdescription,mt.vaddress,tm.mobileno_teacher,tm.design,tm.dob,tm.teacher_name,tm.school_code,tm.district_name,mt.applydateandtime,mt.resourcetype, mt.ref_planner_id "
-			+ "FROM mytrainings mt " + "JOIN tteacher_master_update tm ON mt.treasuryid = tm.treasuryid "
-			+ "WHERE mt.status = 'waiting for approval'", nativeQuery = true)
-	List<Object[]> findCustomData();
-
-	// get Data for approved list
-	@Query(value = "SELECT mt.tname, mt.tmode, mt.treasuryid, mt.tdescription,mt.vaddress, mt.secondlevelapproval ,tm.mobileno_teacher,tm.design,tm.dob,tm.teacher_name,tm.school_code,tm.district_name,mt.applydateandtime,mt.resourcetype,mt.ref_planner_id  "
-			+ "FROM mytrainings mt " + "JOIN tteacher_master_update tm ON mt.treasuryid = tm.treasuryid "
-			+ "WHERE mt.status ='approved'", nativeQuery = true)
-	List<Object[]> findApprovedData();
-
-	// get Data for rejected list
-	@Query(value = "SELECT mt.tname, mt.tmode, mt.treasuryid, mt.tdescription, mt.vaddress, mt.remarks, "
-			+ "tm.mobileno_teacher, tm.design, tm.dob, tm.teacher_name, tm.school_code, tm.district_name, "
-			+ "mt.applydateandtime, mt.resourcetype, mt.ref_planner_id " + "FROM mytrainings mt "
-			+ "JOIN tteacher_master_update tm ON mt.treasuryid = tm.treasuryid "
-			+ "WHERE mt.status = 'rejected'", nativeQuery = true)
-	List<Object[]> findRejectedData();
-
-	@Modifying
-	@Query("UPDATE ViewMyTrainings v SET v.status = 'approved' WHERE v.treasuryid = :treasuryId  AND v.ref_planner_id = :refPlannerId AND v.vid= :vid")
-	void updateStatusByTreasuryId(@Param("treasuryId") String treasuryId, @Param("refPlannerId") String refPlannerId,
-			@Param("vid") String vid);
-
-	@Query("SELECT a FROM ViewMyTrainings a WHERE a.treasuryid = :treasuryid AND a.tname = :tname")
-	List<ViewMyTrainings> findByTreasuryIdAndTname(@Param("treasuryid") String treasuryid,
-			@Param("tname") String tname);
-
-	@Modifying
-	@Query("UPDATE ViewMyTrainings v SET v.status = 'rejected' WHERE v.treasuryid = :treasuryId  AND v.ref_planner_id = :refPlannerId")
-	void rejectStatusByTreasuryId(@Param("treasuryId") String treasuryId, @Param("refPlannerId") String refPlannerId);
-
-	//
-	@Query("SELECT COUNT(e) FROM ViewMyTrainings e WHERE e.status = 'waiting for approval'")
-	long countByStatusWaitingForApproval();
-
-	//
-	@Query("SELECT COUNT(e) FROM ViewMyTrainings e WHERE e.status = 'approved'")
-	long countByStatusAppoved();
-
-	@Query("SELECT COUNT(e) FROM ViewMyTrainings e WHERE e.status = 'rejected'")
-	long countByStatusRejected();
-
-	@Modifying
-	@Transactional
-	@Query("UPDATE ViewMyTrainings t SET t.status = 'rejected', t.remarks = :remarks WHERE t.treasuryid = :treasuryId AND t.ref_planner_id = :refPlannerIds AND t.vid= :vid")
-	void updateStatusAndRemarks(@Param("treasuryId") String treasuryId, @Param("refPlannerIds") String refPlannerIds,
-			@Param("vid") String vid, @Param("remarks") String remarks);
-
-	@Modifying
-	@Transactional
-	@Query("UPDATE ViewMyTrainings m SET m.status = 'approved', m.secondlevelapproval = :secondlevelapproval WHERE m.treasuryid = :treasuryId AND m.ref_planner_id = :refPlannerIds AND m.vid= :vid ")
-	void updateStatusAndRemarksForSecondLevelApproval(@Param("treasuryId") String treasuryId,
-			@Param("refPlannerIds") String refPlannerIds, @Param("vid") String vid,
-			@Param("secondlevelapproval") String secondlevelapproval);
+	 
 
 	// self-attended trainees will show on waiting-for-approval radio button table
 //	@Query(value = "SELECT mt.tname, mt.tmode, mt.treasuryid, mt.tdescription , mt.vname, mt.vaddress, mt.secondlevelapproval ,tm.mobileno_teacher,tm.design,tm.dob,tm.teacher_name,tm.school_code,tm.district_name,mt.applydateandtime,mt.resourcetype,mt.ref_planner_id "
