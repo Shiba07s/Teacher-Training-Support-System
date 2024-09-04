@@ -14,15 +14,9 @@ public class AttendGradeMaster {
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long slno;
 	private String attendgrade;
-	private String status="Active";
+ 	
 	
-	
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+ 
 	public long getSlno() {
 		return slno;
 	}
